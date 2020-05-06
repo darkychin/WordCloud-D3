@@ -1,0 +1,18 @@
+TODO List - 24/04/2020
+1. Do drag and drop to reposition the list in vue
+2. Do move init() in WordCloudApp to helpers method and provide better naming and calling structure
+3. Do proper css styling with responsive
+4. Made a readme
+5. push to github
+6. do versioning too just for practice
+7. have fun
+
+
+Future TODO - 24/04/2020
+1. Move current app into proper Vue compoenent template structure in apps:
+    - CRUD Word Cloud App 
+    - Word Cloud App
+2. Update the whole structure into node module to import the latest files:
+    - vue node maybe?
+    - d3 layout cloud by Jason Davies
+    - d3 (dependency by d3 layout cloud)
