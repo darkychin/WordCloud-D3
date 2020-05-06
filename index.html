@@ -1,0 +1,77 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>CRUD-Word Cloud</title>
+    <meta name="description" content="The Vue.js Word Cloud with D3">
+    <meta name="author" content="Darky">
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/styles.css?v=1.0">
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{ title }}</h2>
+        <!-- Word List -->
+        <!-- "v-on:" shorthand is "@" or ":" -->
+        <ul
+            @dragover.prevent
+            @drop.prevent="dropWord"
+        >
+            <li 
+                v-for="(word,index) in list"
+                draggable="true"
+            >
+                <!-- v.model.lazy will update only when onChange -->
+                <input
+                    v-model.lazy="word.text"
+                    @change="updateWordCloud()"
+                    type="text"
+                />
+                {{ ' with weight of ' + word.weight }}
+                <button
+                    v-on:click="deleteWord(index)"
+                >
+                Remove
+                </button>
+            </li>
+        </ul>
+        <!-- Word Submit -->
+        <form 
+            v-on:submit.prevent="addNewWord"
+        >
+            <input 
+                v-model="word.text" 
+                placeholder="Insert word" 
+            />
+            <input
+                type="number"
+                v-model.number="word.weight" 
+                placeholder="Insert weight" 
+            />
+            <button>Add</button>
+        </form>
+        <!-- Word List Text Area for debug for dev -->
+        <textarea style="display:none;height:200px;width:400px;">{{ list }}</textarea>
+        <!-- Word Cloud -->
+        <div id="wordCloud">
+        
+        </div>
+    </div>
+
+  <!-- Framework -->
+  <script src="js/vue.js"></script>
+  <!-- <script src="js/vue.min.js"></script> -->
+  <!-- Library -->
+  <script src="js/wordcloud/d3.js"></script>
+  <!-- <script src="js/wordcloud/d3.min.js"></script> -->
+  <script src="js/wordcloud/d3.layout.cloud.js"></script>
+  <!-- Main -->
+  <script src="js/main.js"></script>
+</body>
+
+</html>

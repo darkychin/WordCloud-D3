@@ -21,3 +21,8 @@ $RECYCLE.BIN/
 # =========================
 # Operating System Files
 # =========================
+.eslintrc.json
+*.zip
+.vscode/launch.json
+package-lock.json
+*.code-workspace
