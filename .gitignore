@@ -26,3 +26,4 @@ $RECYCLE.BIN/
 .vscode/launch.json
 package-lock.json
 *.code-workspace
+node_modules/
