@@ -6,6 +6,8 @@
  * 1. Moved from global init to object scope init - 20/04/2020 Darky
  * 2. WordCloudApp cannot be freeze  due to init() and draw() is changing the
  * layout and fill attribute.
+ * 3. Use http://bl.ocks.org/joews/9697914 as animation and code structure breakdown reference
+ * 4. Use http://bl.ocks.org/joews/9697914 to add relevant comments
  */
 const WordCloudApp = ({
   name: 'Word Cloud',
@@ -72,12 +74,18 @@ const WordCloudApp = ({
      * @param {<Array>String} words an array of word to draw
      *
      * Note:
-     * function name update from 'draw' to 'drawCloud'
+     * 05/06/2020 - try using this to avoid reinitializing layout because redundancy
      */
     drawCloud(words) {
       const layout = WordCloudApp.layout;
       const fill = WordCloudApp.fill;
 
+      /** 
+       * Construct word cloud SVG element
+       * Comment Reference: http://bl.ocks.org/joews/9697914
+       * 
+       * let svg = 
+        */
       d3.select("#wordCloud").append("svg")
         .attr("width", layout.size()[0])
         .attr("height", layout.size()[1])
