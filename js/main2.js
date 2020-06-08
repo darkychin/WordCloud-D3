@@ -197,7 +197,7 @@ function WordCloudApp2(selector) {
             // fill is added here to restyle the color of the existing word
             .style("fill", function (d, i) { return fill(i); })
             .attr("text-anchor", "middle")
-            .attr('font-size', 1)
+            .style('font-size', 1)
             .text(function (d) { return d.text; });
 
         //Entering and existing words with animations
@@ -229,13 +229,21 @@ function WordCloudApp2(selector) {
         //The outside world will need to call this function, so make it part
         // of the wordCloud return value.
         update: function (words) {
+            // Reupdate scale max and min with the latest words
+            scale.domain([
+                d3.min(words, (d) => d.weight),
+                d3.max(words, (d) => d.weight),
+            ]);
+            
             d3.layout.cloud().size([500, 500])
                 .words(words.map(function (d) { return { text: d.text, size: d.weight }; }))
                 .padding(5)
                 // .rotate(function () { return ~~(Math.random() * 2) * 90; })
                 .rotate(function () { return 0; })
                 .font("Impact")
-                .fontSize(function (d) { return d.size; })
+                // layout.cloud does not have "style"
+                .fontSize(function (d) { return scale(d.size); })
+                // .style("font-size", function (d) { return scale(d.size) + "px"; })
                 .on("end", draw)
                 .start();
         }
