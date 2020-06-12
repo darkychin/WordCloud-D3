@@ -1,5 +1,5 @@
 /**
- * This is a rewrite and testing of main.js to have a better understanding of  d3 cloud layout drawing
+ * This is a rewrite and testing of main.js to have a better understanding of d3 cloud layout drawing
  * with reference of :
  * 1. http://bl.ocks.org/joews/9697914
  * 2. https://github.com/joews/d3-cloud
@@ -162,16 +162,19 @@ const WordCloudApp = ({
     },
 });
 
-
+/**
+ * The recreation of WordCloud App with better break down
+ * @param {html element id} selector 
+ */
 function WordCloudApp2(selector) {
     // Set up properties
     this.name = "Word Cloud";
     this.version = "1.1.2"
     this.width = 600;
     this.height = 500;
-    // fill is color list
+    // fill is a color list
     this.fill = d3.scale.category20();
-    // hard setting the lower and upper boundary
+    // hard setting the lower and upper boundary of font size
     this.scale = d3.scale.linear().range([20, 70]);
 
 
@@ -185,37 +188,42 @@ function WordCloudApp2(selector) {
 
     // Draw the word cloud
     function draw(words) {
-        // Select the svg's child element that contain the child and insert the data
+        // Select the svg's child element g and its child text
         let cloud = svg.selectAll("g text")
             .data(words, function (d) { return d.text; });
 
-        //Entering words (when new word is added)
+        // Entering words (when new word is added)
         cloud.enter()
             .append("text")
-            // Use style() you know to style the word cloud...
+            // use style() you know to style the word cloud...
             .style("font-family", "Impact")
-            // fill is added here to restyle the color of the existing word
-            .style("fill", function (d, i) { return fill(i); })
             .attr("text-anchor", "middle")
+            // this is the initial font size when a word is entered
             .style('font-size', 1)
             .text(function (d) { return d.text; });
 
-        //Entering and existing words with animations
+        // Entering new words and modify existing words with animations(transition)
         cloud.transition()
-            // .ease(d3.easePoly, 2) commented n stop here
             .duration(600)
+            // grow font size following the scale
             .style("font-size", function (d) { return d.size + "px"; })
+            // move word into new position
             .attr("transform", function (d) {
-                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                // commented rotate
+                // return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                return "translate(" + [d.x, d.y] + ")";
             })
+            // restyle the color of the words
             .style("fill", function (d, i) { return fill(i); })
             .style("fill-opacity", 1);
 
-        //Exiting words
+        // Exiting words
         cloud.exit()
             .transition()
             .duration(200)
+            // fade exit words
             .style('fill-opacity', 1e-6)
+            // shrink exit words
             .attr('font-size', 1)
             .remove();
     }
@@ -235,13 +243,14 @@ function WordCloudApp2(selector) {
                 d3.max(words, (d) => d.weight),
             ]);
             
+            // Davies layout.cloud drawing starts here
             d3.layout.cloud().size([500, 500])
                 .words(words.map(function (d) { return { text: d.text, size: d.weight }; }))
                 .padding(5)
                 // .rotate(function () { return ~~(Math.random() * 2) * 90; })
                 .rotate(function () { return 0; })
                 .font("Impact")
-                // layout.cloud does not have "style"
+                // layout.cloud does not have ".style" function
                 .fontSize(function (d) { return scale(d.size); })
                 // .style("font-size", function (d) { return scale(d.size) + "px"; })
                 .on("end", draw)
@@ -316,7 +325,7 @@ const app = new Vue({
             // WordCloudApp.helpers.drawUpdate(this.list);
             // Reference for this:
             // https://stackoverflow.com/a/44845603/7939633
-            setTimeout(() => { this.cloud.update(this.list) }, 2000);
+            setTimeout(() => { this.cloud.update(this.list) }, 800);
         },
         /**
          * Delete a word from Vue object List
@@ -324,7 +333,7 @@ const app = new Vue({
          */
         deleteWord(index) {
             this.list.splice(index, 1);
-            // WordCloudApp.helpers.drawUpdate(this.list);
+            setTimeout(() => { this.cloud.update(this.list) }, 800);
         },
         /**
          * Update word cloud with new word in the list
