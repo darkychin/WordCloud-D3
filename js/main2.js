@@ -206,4 +206,17 @@ const app = new Vue({
          */
         updateWordCloud() { },
     },
+    dragWord() {
+
+    },
+    dropWord(event) {
+        console.log(event.target.parentNode);
+    },
+    moveWord(index, newIndex) {
+        const temp = this.list.splice(index, 1)[0];
+        this.list.splice(newIndex, 0, temp);
+    },
+    loadWord() {
+
+    },
 });
