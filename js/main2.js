@@ -1,10 +1,14 @@
 /**
- * This is a rewrite and testing of main.js to have a better understanding of d3 cloud layout drawing
- * with reference of :
+ * Word Cloud App
+ * 
+ * Basic Reference:
+ * 1. https://www.youtube.com/watch?v=1KEiTIu0k44
+ * 
+ * D3 and layout.cloud drawing breakdown and structure reference:
  * 1. http://bl.ocks.org/joews/9697914
  * 2. https://github.com/joews/d3-cloud
  * 
- * Reference on d3 library entering exiting:
+ * Reference of D3 library entering exiting:
  * 1. https://medium.com/@c_behrens/enter-update-exit-6cafc6014c36
  * 2. https://www.d3indepth.com/enterexit/
  */
@@ -12,8 +16,6 @@
 /**
  * Initialize Word Cloud App
  * @param {string} selector - html element id
- * 
- * Note: This is the recreation of Word Cloud App with enhanced break down and comments
  */
 function WordCloudApp(selector) {
     // Set up properties
@@ -108,7 +110,12 @@ function WordCloudApp(selector) {
                 d3.layout.cloud().size([width, height])
                     .words(words.map(function (d) { return { text: d.text, size: d.weight }; }))
                     .padding(5)
+                    /** 
+                    * Double tilde explained: 
+                    * https://stackoverflow.com/questions/4055633/what-does-double-tilde-do-in-javascript 
+                    */
                     // .rotate(function () { return ~~(Math.random() * 2) * 90; })
+                    // 0 means horizontal
                     .rotate(function () { return 0; })
                     .font("Impact")
                     // layout.cloud does not have ".style" function
