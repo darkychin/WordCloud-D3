@@ -7,6 +7,13 @@ The meaning of CRUD is:
 3. Update
 4. Delete
 
+## Library
+2. [D3 v5.16.0](https://github.com/d3/d3/releases/download/v5.16.0/d3.zip)
+3. [d3.layout.cloud v1.1.2](https://github.com/jasondavies/d3-cloud/blob/v1.1.2/d3.layout.cloud.js)
+
+# Framework
+1. [Vue v2.6.11](https://vuejs.org/js/vue.min.js)
+
 ## TODO
 1. ~~Merge main2.js into main.js~~
 2. Create multi word cloud feature with drag and drop
