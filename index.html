@@ -9,8 +9,11 @@
     <meta name="description" content="The Vue.js Word Cloud with D3">
     <meta name="author" content="Darky">
 
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/styles.css?v=1.0">
+    <link href="css/normalize.css" rel="stylesheet">
+    <link href="css/styles.css?v=1.0" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -18,25 +21,25 @@
         <h2>{{ title }}</h2>
         <!-- Word List -->
         <!-- "v-on:" shorthand is "@" or ":" -->
-        <ul
-            @dragover.prevent
+        <ul 
+            @dragover.prevent 
             @drop.prevent="dropWord"
         >
             <li 
-                v-for="(word,index) in list"
+                v-for="(word,index) in list" 
                 draggable="true"
             >
                 <!-- v.model.lazy will update only when onChange -->
-                <input
-                    v-model.lazy="word.text"
-                    @change="updateWordCloud()"
-                    type="text"
+                <input 
+                    v-model.lazy="word.text" 
+                    @change="updateWordCloud()" 
+                    type="text" 
                 />
                 {{ ' with weight of ' + word.weight }}
-                <button
+                <button 
                     v-on:click="deleteWord(index)"
                 >
-                Remove
+                    Remove
                 </button>
             </li>
         </ul>
@@ -48,8 +51,8 @@
                 v-model="word.text" 
                 placeholder="Insert word" 
             />
-            <input
-                type="number"
+            <input 
+                type="number" 
                 v-model.number="word.weight" 
                 placeholder="Insert weight" 
             />
@@ -58,20 +61,86 @@
         <!-- Word List Text Area for debug for dev -->
         <textarea style="display:none;height:200px;width:400px;">{{ list }}</textarea>
         <!-- Word Cloud -->
-        <div id="wordCloud">
-        
+        <div id="wordCloud"></div>
+
+        <div id="settings" style="position: absolute;right: 0;top: 0;">
+            <!--Word Cloud Settings-->
+            <form 
+                v-on:submit.prevent="setSettings"
+            >
+                <h3>Settings</h3>
+                <i class="material-icons-outlined">settings</i>
+                <div>
+                    <label for="width">Width:</label>
+                    <input
+                        name="width"
+                        type="number"
+                        v-model.lazy="settings.width"  
+                    />
+                </div>
+                <div>
+                    <label for="height">Height:</label>
+                    <input id="height" name="height" />
+                </div>
+                <div>
+                    <span>Spectrum: Preset</span>
+                    <br>
+                    <input id="spectrum1" name="spectrum1" type="color" />
+                    <label for="spectrum1">Spectrum 1</label>
+                    <input id="spectrum2" name="spectrum2" type="color" />
+                    <label for="spectrum2">Spectrum 2</label>
+                </div>
+                <div>
+                    <span>Word Size:</span>
+                    <br>
+                    <label for="wordSizeMin">Min:</label>
+                    <input id="wordSizeMin" name="word-size-min" type="number" />
+                    <label for="wordSizeMax">Max:</label>
+                    <input id="wordSizeMax" name="word-size-max" type="number" />
+                </div>
+                <div>
+                    <fieldset>
+                        <legend>Rotation:</legend>
+                        <ul>
+                            <li>
+                                <label for="rotateDefault">
+                                    <input type="radio" id="rotateDefault" name="rotate" value="default" checked />
+                                    Default
+                                </label>
+                            </li>
+                            <li>
+                                <label for="rotateRandom">
+                                    <input type="radio" id="rotateRandom" name="rotate" value="random" />
+                                    Random
+                                </label>
+                            </li>
+                            <li>
+                                <label for="rotateDeg">
+                                    <input type="radio" id="rotateDeg" name="rotate" value="degree" />
+                                    Degree
+                                    <input id="rotateDeg" type="number" />
+                                </label>
+
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+                <button>
+                    <i class="material-icons">refresh</i>
+                </button>
+            </form>
         </div>
     </div>
 
-  <!-- Framework -->
-  <script src="js/vue.js"></script>
-  <!-- <script src="js/vue.min.js"></script> -->
-  <!-- Library -->
-  <script src="js/wordcloud/d3.js"></script>
-  <!-- <script src="js/wordcloud/d3.min.js"></script> -->
-  <script src="js/wordcloud/d3.layout.cloud.js"></script>
-  <!-- Main -->
-  <script src="js/main.js"></script>
+    <!-- Framework -->
+    <script src="js/vue.js"></script>
+    <!-- <script src="js/vue.min.js"></script> -->
+    <!-- Library -->
+    <script src="js/wordcloud/d3.js"></script>
+    <!-- <script src="js/wordcloud/d3.min.js"></script> -->
+    <script src="js/wordcloud/d3.layout.cloud.js"></script>
+    <!-- Main -->
+    <script src="js/main.js"></script>
 </body>
 
 </html>

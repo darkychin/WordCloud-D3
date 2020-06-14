@@ -39,6 +39,16 @@ function WordCloudApp(selector) {
 
 
     /**
+     * Restyle the SVG with width and height of WordCloudApp
+     *  STOPS here boi 14/06/2020 Darky
+     */
+    function styleSVG() {
+        svg.style("width", width + "px")
+            .style("height", height + "px")
+            .append("g")
+            .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")");
+    }
+    /**
      * Draw word cloud with D3 while inherit settings from layout.cloud
      * @param {string[]} words - an array of new words to draw
      * @param {string} words[].text - word
@@ -89,6 +99,11 @@ function WordCloudApp(selector) {
     // expose only the parts that need to be public.
     return {
         helpers: {
+            setup: function (settings) {
+                width = settings.width || 600;
+                height = settings.height || 500;
+                styleSVG();
+            },
             /**
              * Public function to call to update the word cloud with new words or weight
              * @param {string[]} words - an array of new words to draw
@@ -153,6 +168,10 @@ const app = new Vue({
             text: null,
             weight: null,
         },
+        // settings holder obj
+        settings: {
+            width: null,
+        },
         // update to an array in the future
         cloud: null,
     },
@@ -177,6 +196,10 @@ const app = new Vue({
          *  newMethod() {...}
          */
 
+        setSettings() {
+            this.cloud.helpers.setup(this.settings);
+            this.updateWordCloud();
+        },
         /**
          * Add new word into Vue object list
          */
@@ -193,10 +216,7 @@ const app = new Vue({
                 weight: this.word.weight,
             });
             this.word = resetWordInputBox();
-
-            // Reference to use timeout in Vue:
-            // https://stackoverflow.com/a/44845603/7939633
-            setTimeout(() => { this.cloud.helpers.update(this.list) }, 800);
+            this.updateWordCloud();
         },
         /**
          * Delete a word from Vue object List
@@ -205,13 +225,16 @@ const app = new Vue({
          */
         deleteWord(index) {
             this.list.splice(index, 1);
-            setTimeout(() => { this.cloud.helpers.update(this.list) }, 800);
+            this.updateWordCloud();
         },
         /**
-         * Update word cloud with new word in the list
-         * Note: V-model establish two way binding, so this function is not require
+         * Update word cloud with word in the list
          */
-        updateWordCloud() { },
+        updateWordCloud() {
+            // Reference to use timeout in Vue:
+            // https://stackoverflow.com/a/44845603/7939633
+            setTimeout(() => { this.cloud.helpers.update(this.list) }, 800);
+        },
     },
     dragWord() {
 
