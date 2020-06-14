@@ -8,7 +8,7 @@ The meaning of CRUD is:
 4. Delete
 
 ## TODO
-1. Merge main2.js into main.js
+1. ~~Merge main2.js into main.js~~
 2. Create multi word cloud feature with drag and drop
 3. Create word cloud settings feature
 4. Try to create read user data feature
