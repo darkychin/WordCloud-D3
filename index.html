@@ -10,7 +10,9 @@
     <meta name="author" content="Darky">
 
     <link href="css/normalize.css" rel="stylesheet">
-    <link href="css/styles.css?v=1.0" rel="stylesheet">
+    <!-- If you planned to use this, please remove normalize.css because it is included in it - 04/07/2020 Darky 
+        <link rel="stylesheet" href="css/materialize.css"> -->
+    <!-- <link href="css/styles.css?v=1.0" rel="stylesheet"> -->
     <link
         href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
         rel="stylesheet">
@@ -18,7 +20,7 @@
 
 <body>
     <div id="app">
-        <h2>{{ title }}</h2>
+        <h1>{{ title }}</h1>
         <!-- Word List -->
         <!-- "v-on:" shorthand is "@" or ":" -->
         <ul 
@@ -51,6 +53,7 @@
                 v-model="word.text" 
                 placeholder="Insert word" 
             />
+            <!-- all v-model should be move to the first one -->
             <input 
                 type="number" 
                 v-model.number="word.weight" 
@@ -80,7 +83,11 @@
                 </div>
                 <div>
                     <label for="height">Height:</label>
-                    <input id="height" name="height" />
+                    <input 
+                        name="height"
+                        type="number"
+                        v-model.lazy="settings.height"
+                    />
                 </div>
                 <div>
                     <span>Spectrum: Preset</span>
@@ -91,12 +98,29 @@
                     <label for="spectrum2">Spectrum 2</label>
                 </div>
                 <div>
+                    <span>Word Limit</span>
+                    <input 
+                        name="wordLimit"
+                        type="number"
+                        v-model.number.lazy="settings.wordLimit"
+                    />
+                </div>
+                <div>
                     <span>Word Size:</span>
                     <br>
                     <label for="wordSizeMin">Min:</label>
-                    <input id="wordSizeMin" name="word-size-min" type="number" />
+                    <!-- stop here for min max size and partitioning, please refer to d3 for more info - 12/08/2020 Darky -->
+                    <input 
+                        name="minFontSize" 
+                        type="number" 
+                        v-model.number.lazy="settings.minFontSize"
+                    />
                     <label for="wordSizeMax">Max:</label>
-                    <input id="wordSizeMax" name="word-size-max" type="number" />
+                    <input 
+                        name="maxFontSize" 
+                        type="number" 
+                        v-model.number.lazy="settings.maxFontSize"
+                    />
                 </div>
                 <div>
                     <fieldset>
@@ -104,21 +128,43 @@
                         <ul>
                             <li>
                                 <label for="rotateDefault">
-                                    <input type="radio" id="rotateDefault" name="rotate" value="default" checked />
+                                    <input
+                                        v-model.number.lazy="settings.rotate"
+                                        id="rotateDefault" 
+                                        name="rotate" 
+                                        type="radio" 
+                                        value=0 
+                                        checked 
+                                    />
                                     Default
                                 </label>
                             </li>
                             <li>
                                 <label for="rotateRandom">
-                                    <input type="radio" id="rotateRandom" name="rotate" value="random" />
+                                    <input 
+                                        v-model.number.lazy="settings.rotate"
+                                        id="rotateRandom"
+                                        name="rotate" 
+                                        type="radio"
+                                        value=1 
+                                    />
                                     Random
                                 </label>
                             </li>
                             <li>
-                                <label for="rotateDeg">
-                                    <input type="radio" id="rotateDeg" name="rotate" value="degree" />
+                                <label for="rotateWithDegree">
+                                    <input
+                                        v-model.number.lazy="settings.rotate"
+                                        id="rotateWithDegree"
+                                        name="rotate" 
+                                        type="radio"  
+                                        value=2 
+                                    />
                                     Degree
-                                    <input id="rotateDeg" type="number" />
+                                    <input
+                                        v-model.number.lazy="settings.rotateDegree" 
+                                        type="number"
+                                    />
                                 </label>
 
                             </li>
@@ -139,6 +185,8 @@
     <script src="js/wordcloud/d3.js"></script>
     <!-- <script src="js/wordcloud/d3.min.js"></script> -->
     <script src="js/wordcloud/d3.layout.cloud.js"></script>
+    <!-- Pan zoom testing -->
+    <script src='https://unpkg.com/panzoom@9.2.4/dist/panzoom.min.js'></script>
     <!-- Main -->
     <script src="js/main.js"></script>
 </body>

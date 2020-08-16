@@ -23,3 +23,10 @@ The meaning of CRUD is:
 6. Redo everything in Vue Node and use latest D3 and Jason Davies cloud.layout (keep the pure js version in sub directory
 7. Host the web app on github pages (if possible)
 8. HAVE FUN (THIS IS A THREAT)
+
+
+## TODO in settings branch
+1. Take in in the user requested svg width and height and only apply them on full screen view
+2. small svg view will do viewbox fit, but it need to be larger
+3. provide max word shown settings, and hide add words when limit reaches
+4. (prioritize) start doing other functionalities first before going deeper into svg, hence do a basic draft for options, later then only go even deeper.

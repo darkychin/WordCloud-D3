@@ -18,18 +18,25 @@
  * @param {string} selector - html element id
  */
 function WordCloudApp(selector) {
+    // please update everything here into let 11/08/2020 Darky
+    let wordLimit = 15;
     // Set up properties
     this.name = "Word Cloud";
-    this.version = "1.1.2"
+    this.version = "0.1"
     this.width = 600;
     this.height = 500;
     // fill is a color list
     this.fill = d3.scale.category20();
     // hard setting the lower and upper boundary of font size (update to dynamic in the future)
     this.scale = d3.scale.linear().range([20, 70]);
+    this.rotateDegree = 0;
 
 
     //Construct the word cloud's SVG element
+
+    // update note: this.svg will only contain <g> because that is the latest appended element, 
+    // and d3 will return it after appending, so please change it into new name.
+    // other than than, the multi wordcloud issue might also arise when using d3 to select the correct svg, unless using unique ID.
     this.svg = d3.select(selector).append("svg")
         .style("width", this.width + "px")
         .style("height", this.height + "px")
@@ -37,15 +44,22 @@ function WordCloudApp(selector) {
         // Put the word cloud in the center
         .attr("transform", "translate(" + (this.width / 2) + "," + (this.height / 2) + ")");
 
+    this.realSVG = d3.select(selector + " svg");
 
     /**
      * Restyle the SVG with width and height of WordCloudApp
      *  STOPS here boi 14/06/2020 Darky
      */
     function styleSVG() {
-        svg.style("width", width + "px")
+        // console.log(svg);
+        // console.log(d3.select("#wordCloud svg"));
+        // svg.style("width", width + "px")
+        //     .style("height", height + "px")
+        //     .append("g")
+        //     .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")");
+        realSVG.style("width", width + "px")
             .style("height", height + "px")
-            .append("g")
+            .select("g")
             .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")");
     }
     /**
@@ -62,7 +76,7 @@ function WordCloudApp(selector) {
         // Entering words (when new word is added)
         cloud.enter()
             .append("text")
-            // use style() you know to style the word cloud...
+            // use style() you know, to style the word cloud...
             .style("font-family", "Impact")
             .attr("text-anchor", "middle")
             // this is the initial font size when a word is entered
@@ -76,9 +90,10 @@ function WordCloudApp(selector) {
             .style("font-size", function (d) { return d.size + "px"; })
             // move word into new position
             .attr("transform", function (d) {
-                // commented rotate
-                // return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-                return "translate(" + [d.x, d.y] + ")";
+                // uncommented rotate -17/08/2020
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                // commented rotate -17/08/2020
+                // return "translate(" + [d.x, d.y] + ")";
             })
             // restyle the color of the words
             .style("fill", function (d, i) { return fill(i); })
@@ -95,13 +110,28 @@ function WordCloudApp(selector) {
             .remove();
     }
 
-    //Use the module pattern to encapsulate the visualisation code. We'll
+    // Use the module pattern to encapsulate the visualisation code. We'll
     // expose only the parts that need to be public.
     return {
         helpers: {
             setup: function (settings) {
+
+                function getRotateDegree(settings) {
+
+                    let rotateDegree = 0;
+
+                    if (settings.rotate === 2) {
+                        rotateDegree = settings.rotateDegree;
+                    }
+
+                    return rotateDegree;
+                }
+
                 width = settings.width || 600;
                 height = settings.height || 500;
+                wordLimit = settings.wordLimit;
+                scale = d3.scale.linear().range([settings.minFontSize, settings.maxFontSize]);
+                rotateDegree = getRotateDegree(settings);
                 styleSVG();
             },
             /**
@@ -115,15 +145,18 @@ function WordCloudApp(selector) {
              * asycnhronously call draw when the layout has been computed.
              */
             update: function (words) {
+
+                let updateWords = words.slice(0, wordLimit);
+
                 // Update scale max and min with the latest words' weight
                 scale.domain([
-                    d3.min(words, (d) => d.weight),
-                    d3.max(words, (d) => d.weight),
+                    d3.min(updateWords, (d) => d.weight),
+                    d3.max(updateWords, (d) => d.weight),
                 ]);
 
                 // Davies layout.cloud drawing starts here
                 d3.layout.cloud().size([width, height])
-                    .words(words.map(function (d) { return { text: d.text, size: d.weight }; }))
+                    .words(updateWords.map(function (d) { return { text: d.text, size: d.weight }; }))
                     .padding(5)
                     /** 
                     * Double tilde explained: 
@@ -131,7 +164,8 @@ function WordCloudApp(selector) {
                     */
                     // .rotate(function () { return ~~(Math.random() * 2) * 90; })
                     // 0 means horizontal
-                    .rotate(function () { return 0; })
+                    // .rotate(function () { return 0; })
+                    .rotate(function () { return rotateDegree; })
                     .font("Impact")
                     // layout.cloud does not have ".style" function
                     .fontSize(function (d) { return scale(d.size); })
@@ -171,8 +205,18 @@ const app = new Vue({
         // settings holder obj
         settings: {
             width: null,
+            height: null,
+            wordLimit: 15,
+            minFontSize: 20, 
+            maxFontSize: 70,
+
+            /** 
+             * @type {number} rotate mode: 0 - default, 1 - random, 2 - with degree 
+             */
+            rotate: 0, 
+            rotateDegree: 0,
         },
-        // update to an array in the future
+        // update to an array in the future in parent component
         cloud: null,
     },
     /**
@@ -182,6 +226,8 @@ const app = new Vue({
     mounted() {
         this.cloud = WordCloudApp('#wordCloud');
         this.cloud.helpers.update(this.list);
+        // stop here : 11/07/2020 
+        // panzoom(document.getElementById("wordCloud").querySelector("g"));
     },
     methods: {
         /**
