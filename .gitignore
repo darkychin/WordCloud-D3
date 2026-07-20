@@ -27,3 +27,5 @@ $RECYCLE.BIN/
 package-lock.json
 *.code-workspace
 node_modules/
+
+.env
