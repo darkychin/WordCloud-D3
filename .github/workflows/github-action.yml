@@ -1,0 +1,90 @@
+name: Workflow Action
+
+# ? Only Github specifics command here
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows you to trigger the build manually
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: "0" # Essential: fetch all history so the action can see previous tags
+
+  #     - name: Install and build
+  #       # check if no build or /dist are setup?
+  #       # Step 2: Create the folder and move the file
+  #       # - name: Move report to archival folder
+  #       #   run: |
+  #       #     mkdir -p dist      # create dist folder
+  #       #     mv css js index.html /dist/
+
+  #       # else
+  #       run: |
+  #         npm ci
+  #         npm run build
+
+  #     - name: Upload website artifact
+  #       uses: actions/upload-pages-artifact@v3
+  #       with:
+  #         name: build-artifacts
+  #         # If you built a framework app, change "." to your build folder (e.g., "./dist" or "./build")
+  #         path: "./dist"
+
+  # deploy:
+  #   runs-on: ubuntu-20.04
+
+  #   needs: build
+
+  #   permissions:
+  #     contents: write
+
+  #   environment:
+  #     name: github-pages
+  #     url: ${{ steps.deployment.outputs.page_url }}
+
+  #   steps:
+  #     # - name: Checkout repository
+  #     #   uses: actions/checkout@v6
+  #     - name: Download Build Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: build-artifacts
+
+  #     - name: Setup GitHub Pages
+  #       uses: actions/configure-pages@v4
+
+  #     - name: Deploy to GitHub Pages
+  #       id: deployment
+  #       uses: actions/deploy-pages@v4
+
+
+  # bump-and-tag:
+  #   runs-on: ubuntu-20.04
+
+  #   needs: deploy
+
+  #   steps:
+  #     - name: Bump version and push tag
+  #       id: tag_version
+  #       uses: anothrNick/github-tag-action@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         WITH_V: true # Adds a 'v' prefix (e.g., v1.0.1)
+  #         DEFAULT_BUMP: minor
+
+  #     - name: Print new tag
+  #       run: echo "Successfully created tag ${{ steps.tag_version.outputs.new_tag }}"
+
+
+        #stop at how to test locally man 
