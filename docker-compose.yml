@@ -1,0 +1,17 @@
+# What is dood: https://www.avonture.be/blog/docker-out-of-docker-dood/
+name: "dood-for-act-test"
+
+services:
+  act-test:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    stdin_open: true
+    tty: true
+    working_dir: ${PWD}
+    volumes:
+      # We need to share the Docker socket: this technique is called "Docker-out-of-Docker"
+      - /var/run/docker.sock:/var/run/docker.sock
+      # CRITICAL: For DooD, the host path and container path MUST match exactly.
+      # Docker Compose automatically interpolates $PWD from your shell.
+      - ${PWD}:${PWD}
